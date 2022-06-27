@@ -85,6 +85,6 @@ class ExchangeRatesService implements ExchangeRatesInterface
     private function formattedData(array $data): void
     {
         $this->formatter->getData($data);
-        $this->formatter->formatter();
+        $this->formatter->show();
     }
 }

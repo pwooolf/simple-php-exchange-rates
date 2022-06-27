@@ -4,9 +4,11 @@ namespace App\Services\ViewFormatter;
 
 class JsonFormatter extends AbstractFormatter
 {
-    public function formatter()
+    private const CONTENT_TYPE = 'application/json';
+
+    public function show()
     {
-        header('Content-type: application/json; charset=utf-8');
+        header(sprintf('Content-type: %s; charset=utf-8', self::CONTENT_TYPE));
         echo json_encode($this->data);
     }
 }

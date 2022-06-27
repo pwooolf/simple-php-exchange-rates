@@ -7,7 +7,9 @@ use SimpleXMLElement;
 
 class XmlFormatter extends AbstractFormatter
 {
-    public function formatter()
+    private const CONTENT_TYPE = 'text/xml';
+
+    public function show()
     {
         $xml = new SimpleXMLElement('<ExchangeRates/>');
         $this->array_to_xml($this->data, $xml);
@@ -17,7 +19,7 @@ class XmlFormatter extends AbstractFormatter
         $domxml->formatOutput = true;
         $domxml->loadXML($xml->asXML());
 
-        header('Content-type: text/xml; charset=utf-8');
+        header(sprintf('Content-type: %s; charset=utf-8', self::CONTENT_TYPE));
         echo $domxml->saveXML();
     }
 
