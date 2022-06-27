@@ -13,6 +13,8 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && docker-php-ext-install pcntl \
     && docker-php-ext-configure pcntl --enable-pcntl
 
+RUN pecl install apcu && docker-php-ext-enable apcu
+
 # composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 

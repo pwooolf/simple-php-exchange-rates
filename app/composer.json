@@ -4,7 +4,8 @@
     "ext-json": "*",
     "ext-curl": "*",
     "ext-simplexml": "*",
-    "ext-dom": "*"
+    "ext-dom": "*",
+    "cache/apcu-adapter": "^1.2"
   },
   "autoload": {
     "psr-4": {
