@@ -3,6 +3,8 @@
 namespace App\Services\ExchangeRates;
 
 use App\Services\ViewFormatter\FormatterInterface;
+use Psr\SimpleCache\CacheInterface;
+use Psr\SimpleCache\InvalidArgumentException;
 
 class ExchangeRatesService implements ExchangeRatesInterface
 {
@@ -11,16 +13,19 @@ class ExchangeRatesService implements ExchangeRatesInterface
         'Content-Type' => 'Content-Type: application/json',
         'Accept' => 'Accept: application/json'
     ];
+    private const CACHE_KEY = 'exchange_rates';
 
     private FormatterInterface $formatter;
+    private CacheInterface $cache;
 
-    public function __construct(FormatterInterface $formatter)
+    public function __construct(FormatterInterface $formatter, CacheInterface $cache)
     {
         $this->formatter = $formatter;
+        $this->cache = $cache;
     }
 
     /**
-     * @throws ExchangeRatesException
+     * @throws ExchangeRatesException|InvalidArgumentException
      */
     public function init(): void
     {
@@ -31,8 +36,24 @@ class ExchangeRatesService implements ExchangeRatesInterface
 
     /**
      * @throws ExchangeRatesException
+     * @throws InvalidArgumentException
      */
     private function getRates(): array
+    {
+        $data = $this->cache->get(self::CACHE_KEY);
+        if ($data !== null) {
+            return $data;
+        }
+
+        $data = $this->sendRequest();
+        $this->cache->set(self::CACHE_KEY, $data);
+        return $data;
+    }
+
+    /**
+     * @throws ExchangeRatesException
+     */
+    private function sendRequest(): array
     {
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, self::RATES_URL);
