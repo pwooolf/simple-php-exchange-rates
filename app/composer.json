@@ -2,7 +2,9 @@
   "require": {
     "php": "^7.4.13",
     "ext-json": "*",
-    "ext-curl": "*"
+    "ext-curl": "*",
+    "ext-simplexml": "*",
+    "ext-dom": "*"
   },
   "autoload": {
     "psr-4": {

@@ -2,6 +2,8 @@
 
 namespace App\Services\ExchangeRates;
 
+use App\Services\ViewFormatter\FormatterInterface;
+
 class ExchangeRatesService implements ExchangeRatesInterface
 {
     private const RATES_URL = 'https://www.cbr-xml-daily.ru/daily_json.js';
@@ -10,6 +12,16 @@ class ExchangeRatesService implements ExchangeRatesInterface
         'Accept' => 'Accept: application/json'
     ];
 
+    private FormatterInterface $formatter;
+
+    public function __construct(FormatterInterface $formatter)
+    {
+        $this->formatter = $formatter;
+    }
+
+    /**
+     * @throws ExchangeRatesException
+     */
     public function init(): void
     {
         $data = $this->getRates();
@@ -17,6 +29,9 @@ class ExchangeRatesService implements ExchangeRatesInterface
         $this->formattedData($data);
     }
 
+    /**
+     * @throws ExchangeRatesException
+     */
     private function getRates(): array
     {
         $ch = curl_init();
@@ -48,6 +63,7 @@ class ExchangeRatesService implements ExchangeRatesInterface
 
     private function formattedData(array $data): void
     {
-        echo json_encode($data);
+        $this->formatter->getData($data);
+        $this->formatter->formatter();
     }
 }
